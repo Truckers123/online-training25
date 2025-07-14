@@ -1,5 +1,6 @@
 import { build } from 'esbuild';
-import { stylePlugin } from 'esbuild-style-plugin';
+import pkg from 'esbuild-style-plugin';
+const { stylePlugin } = pkg;
 import fs from 'fs';
 import path from 'path';
 
