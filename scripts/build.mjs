@@ -1,10 +1,6 @@
 import { build } from 'esbuild';
-import pkg from 'esbuild-style-plugin';
-const { stylePlugin } = pkg;
 import fs from 'fs';
 import path from 'path';
-import tailwindcss from 'tailwindcss';
-import autoprefixer from 'autoprefixer';
 
 const isProduction = process.argv.includes('--production');
 
@@ -49,16 +45,6 @@ const buildOptions = {
     '.ttf': 'file',
     '.eot': 'file'
   },
-  plugins: [
-    stylePlugin({
-      postcss: {
-        plugins: [
-          tailwindcss,
-          autoprefixer
-        ]
-      }
-    })
-  ],
   define: {
     'process.env.NODE_ENV': isProduction ? '"production"' : '"development"'
   },
