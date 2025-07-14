@@ -1,6 +1,7 @@
 import { build } from 'esbuild';
 import fs from 'fs';
 import path from 'path';
+import { stylePlugin } from 'esbuild-style-plugin';
 
 const isProduction = process.argv.includes('--production');
 
@@ -16,7 +17,50 @@ const htmlTemplate = `<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Offshore Bond Training Tool</title>
-  <link href="./styles.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            border: "hsl(var(--border))",
+            input: "hsl(var(--input))",
+            ring: "hsl(var(--ring))",
+            background: "hsl(var(--background))",
+            foreground: "hsl(var(--foreground))",
+            primary: {
+              DEFAULT: "hsl(var(--primary))",
+              foreground: "hsl(var(--primary-foreground))"
+            },
+            secondary: {
+              DEFAULT: "hsl(var(--secondary))",
+              foreground: "hsl(var(--secondary-foreground))"
+            },
+            destructive: {
+              DEFAULT: "hsl(var(--destructive))",
+              foreground: "hsl(var(--destructive-foreground))"
+            },
+            muted: {
+              DEFAULT: "hsl(var(--muted))",
+              foreground: "hsl(var(--muted-foreground))"
+            },
+            accent: {
+              DEFAULT: "hsl(var(--accent))",
+              foreground: "hsl(var(--accent-foreground))"
+            },
+            popover: {
+              DEFAULT: "hsl(var(--popover))",
+              foreground: "hsl(var(--popover-foreground))"
+            },
+            card: {
+              DEFAULT: "hsl(var(--card))",
+              foreground: "hsl(var(--card-foreground))"
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
 <body>
   <div id="root"></div>
@@ -34,6 +78,13 @@ const buildOptions = {
   target: 'es2020',
   jsx: 'automatic',
   jsxImportSource: 'react',
+  plugins: [
+    stylePlugin({
+      postcss: {
+        plugins: [require('tailwindcss'), require('autoprefixer')]
+      }
+    })
+  ],
   loader: {
     '.png': 'file',
     '.jpg': 'file',
@@ -43,7 +94,8 @@ const buildOptions = {
     '.woff': 'file',
     '.woff2': 'file',
     '.ttf': 'file',
-    '.eot': 'file'
+    '.eot': 'file',
+    '.css': 'text'
   },
   define: {
     'process.env.NODE_ENV': isProduction ? '"production"' : '"development"'
