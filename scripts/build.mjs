@@ -20,7 +20,7 @@ const htmlTemplate = `<!DOCTYPE html>
 </head>
 <body>
   <div id="root"></div>
-  <script src="./main.js"></script>
+  <script type="module" src="./main.js"></script>
 </body>
 </html>`;
 
@@ -49,7 +49,8 @@ const buildOptions = {
     'process.env.NODE_ENV': isProduction ? '"production"' : '"development"'
   },
   minify: isProduction,
-  sourcemap: !isProduction
+  sourcemap: !isProduction,
+  external: []
 };
 
 // Add watch option only for development

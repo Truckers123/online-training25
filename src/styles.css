@@ -1,72 +1,67 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+import { build } from 'esbuild';
+import fs from 'fs';
+import path from 'path';
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-    --radius: 0.5rem;
-  }
-  
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
+const isProduction = process.argv.includes('--production');
+
+// Ensure dist directory exists
+if (!fs.existsSync('dist')) {
+  fs.mkdirSync('dist', { recursive: true });
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+// Copy HTML template
+const htmlTemplate = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offshore Bond Training Tool</title>
+  <link href="./styles.css" rel="stylesheet">
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>`;
+
+fs.writeFileSync('dist/index.html', htmlTemplate);
+
+const buildOptions = {
+  entryPoints: ['src/main.tsx'],
+  bundle: true,
+  outdir: 'dist',
+  format: 'esm',
+  target: 'es2020',
+  jsx: 'automatic',
+  jsxImportSource: 'react',
+  loader: {
+    '.png': 'file',
+    '.jpg': 'file',
+    '.jpeg': 'file',
+    '.gif': 'file',
+    '.svg': 'file',
+    '.woff': 'file',
+    '.woff2': 'file',
+    '.ttf': 'file',
+    '.eot': 'file'
+  },
+  define: {
+    'process.env.NODE_ENV': isProduction ? '"production"' : '"development"'
+  },
+  minify: isProduction,
+  sourcemap: !isProduction,
+  external: []
+};
+
+// Add watch option only for development
+if (!isProduction) {
+  buildOptions.watch = true;
 }
 
-@media print {
-  header,
-  .no-print {
-    display: none !important;
-  }
-  .bg-gray-50 {
-    background: white !important;
-  }
-  .shadow-sm {
-    box-shadow: none !important;
-  }
+try {
+  await build(buildOptions);
+  console.log(isProduction ? 'Build completed successfully!' : 'Development server started!');
+} catch (error) {
+  console.error('Build failed:', error);
+  process.exit(1);
 }
