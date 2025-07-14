@@ -1,103 +1,45 @@
 /**
- * Customizable form header component
- * Displays company branding and form title
+ * Header component for the offshore bond application form
+ * Displays the Walker Crips branding and application title
  */
+
 import React from 'react';
+import { FileText, Building2 } from 'lucide-react';
 
-interface FormHeaderProps {
-  companyName: string;
-  companyAddress: string;
-  companyPhone: string;
-  companyEmail: string;
-  companyWebsite: string;
-  logoUrl: string;
-  formTitle: string;
-  plan1Name: string;
-  plan1Code: string;
-  plan2Name: string;
-  plan2Code: string;
-  plan3Name: string;
-  plan3Code: string;
-  closingDate: string;
-}
-
-const FormHeader: React.FC<FormHeaderProps> = ({
-  companyName,
-  companyAddress,
-  companyPhone,
-  companyEmail,
-  companyWebsite,
-  logoUrl,
-  formTitle,
-  plan1Name,
-  plan1Code,
-  plan2Name,
-  plan2Code,
-  plan3Name,
-  plan3Code,
-  closingDate
-}) => {
+/**
+ * FormHeader component that displays the application title and branding
+ */
+export default function FormHeader() {
   return (
-    <div className="bg-white border-b-2 border-gray-200 p-6 mb-6">
-      <div className="flex items-start justify-between">
-        <div className="flex items-center space-x-6">
-          {logoUrl && (
-            <img 
-              src={logoUrl} 
-              alt="Company Logo" 
-              className="h-16 w-auto object-contain"
-            />
-          )}
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {companyName || 'Your Company Name'}
-            </h1>
-            {companyAddress && (
-              <p className="text-sm text-gray-600 mt-1">{companyAddress}</p>
-            )}
-            <div className="flex space-x-4 mt-2 text-sm text-gray-600">
-              {companyPhone && <span>Tel: {companyPhone}</span>}
-              {companyEmail && <span>Email: {companyEmail}</span>}
+    <div className="bg-white border-b shadow-sm mb-8">
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <Building2 className="w-8 h-8 text-blue-600" />
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Walker Crips Structured Investments</h1>
+              <p className="text-sm text-gray-600">Offshore Bond Application</p>
             </div>
-            {companyWebsite && (
-              <p className="text-sm text-blue-600 mt-1">{companyWebsite}</p>
-            )}
+          </div>
+          
+          <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <FileText className="w-4 h-4" />
+            <span>Application Form</span>
           </div>
         </div>
-      </div>
-      
-      <div className="mt-6">
-        <h2 className="text-xl font-semibold text-gray-800">
-          {formTitle || 'Application form for Offshore Bond investment'}
-        </h2>
-        <p className="text-gray-600 mt-2">
-          This application form is for investment into the following plans:
-        </p>
-        <ul className="list-disc list-inside text-sm text-gray-600 mt-2 space-y-1">
-          {plan1Name && <li>{plan1Name} ({plan1Code})</li>}
-          {plan2Name && <li>{plan2Name} ({plan2Code})</li>}
-          {plan3Name && <li>{plan3Name} ({plan3Code})</li>}
-        </ul>
-        {closingDate && (
-          <div className="mt-3">
-            {closingDate.toLowerCase().includes('no deadline') || closingDate.toLowerCase().includes('rolling') ? (
-              <p className="text-sm text-green-600 font-medium">
-                {closingDate}
-              </p>
-            ) : closingDate.toLowerCase().includes('contact') ? (
-              <p className="text-sm text-blue-600 font-medium">
-                {closingDate}
-              </p>
-            ) : (
-              <p className="text-sm text-red-600 font-medium">
-                The closing date for applications is {closingDate}.
-              </p>
-            )}
-          </div>
-        )}
+        
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+          <h2 className="font-semibold text-blue-900 mb-2">Available Investment Plans:</h2>
+          <ul className="text-sm text-blue-800 space-y-1">
+            <li>• UK Defensive Growth Deposit Plan (SAN016)</li>
+            <li>• UK Step Down Kick-out Deposit Plan (SAN018)</li>
+            <li>• UK Growth Deposit Plan (SAN017)</li>
+          </ul>
+          <p className="text-sm text-blue-700 mt-2">
+            <strong>Closing date for applications:</strong> 5 July 2024
+          </p>
+        </div>
       </div>
     </div>
   );
-};
-
-export default FormHeader;
+}
