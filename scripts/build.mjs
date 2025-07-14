@@ -49,9 +49,13 @@ const buildOptions = {
     'process.env.NODE_ENV': isProduction ? '"production"' : '"development"'
   },
   minify: isProduction,
-  sourcemap: !isProduction,
-  watch: !isProduction
+  sourcemap: !isProduction
 };
+
+// Add watch option only for development
+if (!isProduction) {
+  buildOptions.watch = true;
+}
 
 try {
   await build(buildOptions);
